@@ -1,0 +1,21 @@
+{
+  "name": "meegmc",
+  "version": "1.0.0",
+  "sysver": "1.0.0-alpha-1",
+  "description": "MC server in node",
+  "main": "index.js",
+  "scripts": {
+    "build": "pkg . --public --out-path ./dist",
+    "dev": "npx nodemon -i ./dist",
+    "ptero": "SERVER_PORT=25565 P_SERVER_UUID=dev node ."
+  },
+  "bin": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "arg": "^5.0.2",
+    "fancy-printer": "^1.2.54",
+    "pkg": "^5.8.1"
+  }
+}
