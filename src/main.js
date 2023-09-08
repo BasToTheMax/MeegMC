@@ -33,18 +33,20 @@ async function main() {
 	var host = args['--host'] ?? '0.0.0.0';
 
 	if (process.env['SERVER_PORT'] && process.env['P_SERVER_UUID']) {
-		printer.addTag("pterodactyl", "WINGS", "", "#959bdb", "#c1f7e2");
-		printer.tag("pterodactyl", "Pterodactyl detected! Using pterodactyl port.");
-		printer.tag("pterodactyl", "This can be overwritten by --port");
-		if (!args['--port']) port = parseInt(process.env['SERVER_PORT']);
+		log.addTag("pterodactyl", "WINGS", "", "#959bdb", "#c1f7e2");
+		log.tag("pterodactyl", "Pterodactyl detected! Using pterodactyl port.");
+		log.tag("pterodactyl", "This can be overwritten by --port");
+		if (!args['--port']) {
+			port = parseInt(process.env['SERVER_PORT']);
+		}
 	}
 
-	log.log(`&eStarting minecraft server on &c${host}&e:&c${port}`);
+	log.info(`&eStarting minecraft server on &c${host}&e:&c${port}`);
 	var server = net.createServer();
 
 	server.on('connection', handleConnection);
 	server.listen(port, host, function() {    
-		log.log(`&eStarted TCP listener on &c${host}&e:&c${port}`);  
+		log.info(`&eStarted TCP listener on &c${host}&e:&c${port}`);  
 	});
 
 	function handleConnection(conn) {
