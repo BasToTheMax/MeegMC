@@ -52,10 +52,10 @@ async function main() {
 	function handleConnection(conn) {
 		log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &2open`);
 
-		conn.on('end', () => {
-			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &4closed`);
+		conn.once('end', () => {
+			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &cended`);
 		});
-		conn.on('close', () => {
+		conn.once('close', () => {
 			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &4closed`);
 		});
 		conn.on('error', () => {
