@@ -58,8 +58,9 @@ async function main() {
 		conn.on('error', () => {
 			log.error(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &thas error: &c${String(e)}`);
 		});
-		conn.on('data', async (err, data) => {
-			console.log('data', err, data)
+		conn.on('data', async (data) => {
+			console.log('data', String(data), data);
+			
 		});
 	}
 }
