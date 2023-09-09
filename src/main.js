@@ -52,15 +52,15 @@ async function main() {
 	function handleConnection(conn) {
 		log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &2open`);
 
-		conn.once('end', () => {
-			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &cended`);
-		});
 		conn.once('close', () => {
-			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &4closed`);
+			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &cclosed`);
 		});
 		conn.on('error', () => {
-			log.error(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &thas an error: &c${String(e)}`);
-		});  
+			log.error(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &thas error: &c${String(e)}`);
+		});
+		conn.on('data', async (err, data) => {
+			console.log('data', err, data)
+		});
 	}
 }
 
