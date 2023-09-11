@@ -15,7 +15,7 @@ const args = arg({
     
 	'--port': Number,
 	'--host': String,
-	'--online': Boolean
+	'--offline': Boolean
 });
 
 async function main() {
@@ -32,7 +32,12 @@ async function main() {
 
 	var port = args['--port'] ?? 25565;
 	var host = args['--host'] ?? '0.0.0.0';
-	var online = args['--online'] ?? true;
+	var online = args['--offline'] ?? true;
+	online = !online
+
+	if (online == false) {
+		log.warn("Running insecure mode!")
+	}
 
 	if (process.env['SERVER_PORT'] && process.env['P_SERVER_UUID']) {
 		log.addTag("pterodactyl", "WINGS", "", "#959bdb", "#c1f7e2");

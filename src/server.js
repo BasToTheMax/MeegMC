@@ -11,22 +11,26 @@ async function main(srv) {
 
         log.info(`${client.username} logged in`);
 
+        console.log(loginPacket)
+
         client.write('login', {
             entityId: client.id,
-            isHardcore: false,
-            gameMode: 0,
-            previousGameMode: 255,
-            worldNames: loginPacket.worldNames,
-            dimensionCodec: loginPacket.dimensionCodec,
-            dimension: loginPacket.dimension,
-            worldName: 'minecraft:overworld',
-            hashedSeed: [0, 0],
-            maxPlayers: server.maxPlayers,
-            viewDistance: 10,
-            reducedDebugInfo: false,
-            enableRespawnScreen: true,
-            isDebug: false,
-            isFlat: false
+    isHardcore: false,
+    gameMode: 0,
+    previousGameMode: 1,
+    worldNames: loginPacket.worldNames,
+    dimensionCodec: loginPacket.dimensionCodec,
+    dimension: loginPacket.dimension,
+    worldName: 'minecraft:overworld',
+    hashedSeed: [0, 0],
+    // hashedSeed: "",
+    maxPlayers: server.maxPlayers,
+    viewDistance: 10,
+    simulationDistance: 10,
+    reducedDebugInfo: false,
+    enableRespawnScreen: true,
+    isDebug: false,
+    isFlat: false
         });
 
         log.log('> Creating chunk');
