@@ -9,6 +9,7 @@ menus.help = () => {
 
     res += '\t--host ++ Sets the host ( 0.0.0.0 )\n';
     res += '\t--port ++ Sets the port ( 25565 )\n';
+    res += '\t--online ++ Enables minecraft authentication ( true )\n';
 
     return res;
 };

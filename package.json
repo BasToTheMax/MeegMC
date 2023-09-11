@@ -1,7 +1,7 @@
 {
   "name": "meegmc",
   "version": "1.0.0",
-  "sysver": "1.0.0-alpha-1",
+  "sysver": "mc-20.1-1.0.0-alpha-1",
   "description": "MC server in node",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,10 @@
   "dependencies": {
     "arg": "^5.0.2",
     "fancy-printer": "^1.2.54",
+    "minecraft-protocol": "^1.44.0",
     "pkg": "^5.8.1",
-    "protodef": "^1.15.0"
+    "prismarine-chunk": "^1.35.0",
+    "protodef": "^1.15.0",
+    "vec3": "^0.1.8"
   }
 }

@@ -13,8 +13,9 @@ const args = arg({
 	'--help': Boolean,	
 	'--version': Boolean,
     
-	'--port': Number, // --port <number> or --port=<number>
-	'--host': String, // --name <string> or --name=<string>
+	'--port': Number,
+	'--host': String,
+	'--online': Boolean
 });
 
 async function main() {
@@ -31,6 +32,7 @@ async function main() {
 
 	var port = args['--port'] ?? 25565;
 	var host = args['--host'] ?? '0.0.0.0';
+	var online = args['--online'] ?? true;
 
 	if (process.env['SERVER_PORT'] && process.env['P_SERVER_UUID']) {
 		log.addTag("pterodactyl", "WINGS", "", "#959bdb", "#c1f7e2");
@@ -43,6 +45,20 @@ async function main() {
 
 	log.info(`&eStarting minecraft server on &c${host}&e:&c${port}`);
 	
+	const server = mc.createServer({
+		'online-mode': online,
+		encryption: true,
+		host: host,
+		port: port,
+		version: '1.20.1',
+		maxPlayers: 100
+	});
+
+	require('./server').main([
+		server,
+		log,
+		args
+	]);
 }
 
 module.exports = main;
