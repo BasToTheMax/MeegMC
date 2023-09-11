@@ -1,4 +1,4 @@
-const net = require('net');
+var udp = require('dgram');
 const arg = require('arg');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -10,7 +10,7 @@ const log = printer.create({
 log.setFormat(`%tag %text`);
 const args = arg({
 	// Types
-	'--help': Boolean,
+	'--help': Boolean,	
 	'--version': Boolean,
     
 	'--port': Number, // --port <number> or --port=<number>
@@ -41,28 +41,68 @@ async function main() {
 		}
 	}
 
-	log.info(`&eStarting minecraft server on &c${host}&e:&c${port}`);
-	var server = net.createServer();
-
-	server.on('connection', handleConnection);
-	server.listen(port, host, function() {    
-		log.info(`&eStarted TCP listener on &c${host}&e:&c${port}`);  
+	log.info(`&eStarting minetest server on &c${host}&e:&c${port}`);
+	var server = udp.createSocket('udp4');
+	server.on('error', (err) => {
+		log.error(err);
 	});
+	server.on('message', (data, info) => {
+		console.log('data', info, data);
+		// server.send([0x01], info.port, info.address);
+		var chunks = [];
 
-	function handleConnection(conn) {
-		log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &2open`);
+		var [peer, channel] = checkHeader(data);
+		var res = Buffer.alloc(4 + 2 + 1 + 1 + 2 + 1 + 1 + 2);
+		res.writeUInt32BE(0x4f457403); // 4 bit
 
-		conn.once('close', () => {
-			log.log(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &tis &cclosed`);
-		});
-		conn.on('error', () => {
-			log.error(`Connection from &c${conn.remoteAddress}:${conn.remotePort} &thas error: &c${String(e)}`);
-		});
-		conn.on('data', async (data) => {
-			console.log('data', String(data), data);
-			
-		});
-	}
+		res.writeUInt16BE(peer); // 2 bit
+		res.writeUInt8(channel); // 1 bit
+
+		res.writeUInt8(0); // rel type (1)
+		res.writeUInt16BE(65500); // seq (2)
+
+		res.writeUInt8(0); // rel cont type (1)
+		res.writeUInt8(1); // cont type (1)
+
+		res.writeUInt16BE(5); // new peer id (2)
+
+		server.send(res, info.port, info.address)
+	});
+	server.on('listening', () => {
+		log.info(`&eServer listening at &c${host}&e:&c${port}`);
+	});
+	server.on('close', () => {
+		log.info(`&eServer has &cclosed.`)
+	});
+	server.on('error', (err) => {
+		log.error(err)
+	});
+	server.on('connect', (a1, a2) => {
+		log.log('Connection', a1, a2);
+	});
+	
+	server.bind(port, host);
 }
 
 module.exports = main;
+
+function checkHeader(data) {
+	var ok = true;
+	if (!checkData(data)) ok = false;
+	var peer = data.readUInt16BE(4);
+	var channel = data.readUInt8(5);
+	console.log('d', peer, channel);
+	return [peer, channel];
+}
+function checkData(data) {
+	var ok = true;
+	if (!checkVal(data[0], 0x4F)) ok = false;
+	if (!checkVal(data[1], 0x45)) ok = false;
+	if (!checkVal(data[2], 0x74)) ok = false;
+	if (!checkVal(data[3], 0x03)) ok = false;
+	return ok;
+}
+function checkVal(data, corrVal) {
+	if (data == corrVal) return true;
+	return false;
+}
