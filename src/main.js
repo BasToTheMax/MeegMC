@@ -1,4 +1,4 @@
-var udp = require('dgram');
+const mc = require('minecraft-protocol');
 const arg = require('arg');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -41,68 +41,8 @@ async function main() {
 		}
 	}
 
-	log.info(`&eStarting minetest server on &c${host}&e:&c${port}`);
-	var server = udp.createSocket('udp4');
-	server.on('error', (err) => {
-		log.error(err);
-	});
-	server.on('message', (data, info) => {
-		console.log('data', info, data);
-		// server.send([0x01], info.port, info.address);
-		var chunks = [];
-
-		var [peer, channel] = checkHeader(data);
-		var res = Buffer.alloc(4 + 2 + 1 + 1 + 2 + 1 + 1 + 2);
-		res.writeUInt32BE(0x4f457403); // 4 bit
-
-		res.writeUInt16BE(peer); // 2 bit
-		res.writeUInt8(channel); // 1 bit
-
-		res.writeUInt8(0); // rel type (1)
-		res.writeUInt16BE(65500); // seq (2)
-
-		res.writeUInt8(0); // rel cont type (1)
-		res.writeUInt8(1); // cont type (1)
-
-		res.writeUInt16BE(5); // new peer id (2)
-
-		server.send(res, info.port, info.address)
-	});
-	server.on('listening', () => {
-		log.info(`&eServer listening at &c${host}&e:&c${port}`);
-	});
-	server.on('close', () => {
-		log.info(`&eServer has &cclosed.`)
-	});
-	server.on('error', (err) => {
-		log.error(err)
-	});
-	server.on('connect', (a1, a2) => {
-		log.log('Connection', a1, a2);
-	});
+	log.info(`&eStarting minecraft server on &c${host}&e:&c${port}`);
 	
-	server.bind(port, host);
 }
 
 module.exports = main;
-
-function checkHeader(data) {
-	var ok = true;
-	if (!checkData(data)) ok = false;
-	var peer = data.readUInt16BE(4);
-	var channel = data.readUInt8(5);
-	console.log('d', peer, channel);
-	return [peer, channel];
-}
-function checkData(data) {
-	var ok = true;
-	if (!checkVal(data[0], 0x4F)) ok = false;
-	if (!checkVal(data[1], 0x45)) ok = false;
-	if (!checkVal(data[2], 0x74)) ok = false;
-	if (!checkVal(data[3], 0x03)) ok = false;
-	return ok;
-}
-function checkVal(data, corrVal) {
-	if (data == corrVal) return true;
-	return false;
-}
