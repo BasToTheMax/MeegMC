@@ -1,41 +1,9 @@
-const mcData = require('minecraft-data')('1.20.1');
-const Chunk = require('prismarine-chunk')('1.20.1')
+const mcData = require('minecraft-data')('1.18.2');
+const Chunk = require('prismarine-chunk')('1.18.2')
 const Vec3 = require('vec3')
 
-
-async function main(srv) {
-    const loginPacket = mcData.loginPacket
-    var [server, log, ars] = srv;
-
-    server.on('login', (client) => {
-
-        log.info(`${client.username} logged in`);
-
-        console.log(loginPacket)
-
-        client.write('login', {
-            entityId: client.id,
-    isHardcore: false,
-    gameMode: 0,
-    previousGameMode: 1,
-    worldNames: loginPacket.worldNames,
-    dimensionCodec: loginPacket.dimensionCodec,
-    dimension: loginPacket.dimension,
-    worldName: 'minecraft:overworld',
-    hashedSeed: [0, 0],
-    // hashedSeed: "",
-    maxPlayers: server.maxPlayers,
-    viewDistance: 10,
-    simulationDistance: 10,
-    reducedDebugInfo: false,
-    enableRespawnScreen: true,
-    isDebug: false,
-    isFlat: false
-        });
-
-        log.log('> Creating chunk');
-
-        var chunk = new Chunk({
+ var chunk;
+ chunk = new Chunk({
             minY: -64,
             worldHeight: 384
         });
@@ -53,6 +21,42 @@ async function main(srv) {
           var skyLight = [],blockLight = [];
           chunk.skyLightSections.forEach(e=>e!==null&&skyLight.push(new Uint8Array(e.data.buffer)));
           chunk.blockLightSections.forEach(e=>e!==null&&blockLight.push(new Uint8Array(e.data.buffer)));
+
+
+async function main(srv) {
+    const loginPacket = mcData.loginPacket
+    var [server, log, ars] = srv;
+
+    server.on('login', (client) => {
+
+        log.info(`${client.username} logged in`);
+
+        client.registerChannel('minecraft:brand', ['string', []])
+  client.on('minecraft:brand', console.log)
+
+        client.write('login', {
+          entityId: client.id,
+          isHardcore: false,
+          gameMode: 0,
+          previousGameMode: -1,
+          worldNames: loginPacket.worldNames,
+          dimensionCodec: loginPacket.dimensionCodec,
+          dimension: loginPacket.dimension,
+          worldType: 'minecraft:overworld',
+          worldName: 'minecraft:overworld',
+          hashedSeed: loginPacket.hashedSeed,
+          maxPlayers: server.maxPlayers,
+          viewDistance: 10,
+          simulationDistance: 10,
+          reducedDebugInfo: false,
+          enableRespawnScreen: true,
+          isDebug: false,
+          isFlat: false
+        });      
+
+        log.log('> Creating chunk');
+
+       
 
           log.log('> Chunk created');
 
@@ -87,6 +91,8 @@ async function main(srv) {
         });
 
         log.log('> Chunk sent!');
+
+        client.writeChannel('minecraft:brand', 'Retslav')
 
     });
 }

@@ -55,7 +55,7 @@ async function main() {
 		encryption: true,
 		host: host,
 		port: port,
-		version: '1.20.1',
+		version: '1.18.2',
 		maxPlayers: 100
 	});
 
