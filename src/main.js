@@ -41,10 +41,12 @@ async function main() {
 
 	if (process.env['SERVER_PORT'] && process.env['P_SERVER_UUID']) {
 		log.addTag("pterodactyl", "WINGS", "", "#959bdb", "#c1f7e2");
-		log.tag("pterodactyl", "Pterodactyl detected! Using pterodactyl port.");
-		log.tag("pterodactyl", "This can be overwritten by --port");
 		if (!args['--port']) {
+			log.tag("pterodactyl", "Pterodactyl detected! Using pterodactyl port.");
+			log.tag("pterodactyl", "This can be overwritten by --port");
 			port = parseInt(process.env['SERVER_PORT']);
+		} else {
+			log.tag("pterodactyl", "Pterodactyl detected, but using --port");
 		}
 	}
 
