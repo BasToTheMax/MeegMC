@@ -27,9 +27,11 @@ function sendChunk(client, x, y) {
     chunk.skyLightSections.forEach(e => e !== null && skyLight.push(new Uint8Array(e.data.buffer)));
     chunk.blockLightSections.forEach(e => e !== null && blockLight.push(new Uint8Array(e.data.buffer)));
 
-    chunkSave.saveChunk('world', x, y, chunk.dump());
+    chunkSave.saveChunk('world', x, y, 1, chunk.dump());
+    chunkSave.saveChunk('world', x, y, 1, chunk.dumpLight());
+    chunkSave.saveChunk('world', x, y, 1, chunk.loadLight());
   } else {
-    chunk.load(ch[1]);
+    chunk.load(ch[1], 0xFFFF, false, true);
   }
 
   client.write('map_chunk', {
@@ -52,11 +54,8 @@ function sendChunk(client, x, y) {
     skyLight,
     blockLight
   });
+
 }
-
-var chunk;
-
-
 
 
 

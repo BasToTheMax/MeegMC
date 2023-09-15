@@ -4,7 +4,7 @@ function getDir(world, x) {
     return `${__dirname}/worlds/${world}/chunks/${x}/`;
 }
 function getPath(world, x, y) {
-    return `${getDir(world, x)}/${y}.world`;
+    return `${getDir(world, x)}/${y}`;
 }
 
 function getChunk(world, x, y) {
@@ -15,13 +15,13 @@ function getChunk(world, x, y) {
         fs.mkdirSync(dir, { recursive: true });
         return [false, null];
     }
-    if (!fs.existsSync(path)) return [false, null];
+    if (!fs.existsSync(path + '.world')) return [false, null];
 
     return [true, fs.readFileSync(path)];
 }
-function saveChunk(world, x, y, data) {
+function saveChunk(world, x, y, type, data) {
     var dir = getDir(world, x);
-    var path = getPath(world, x, y);
+    var path = getPath(world, x, y) + '.' + type;
 
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });

@@ -1,5 +1,7 @@
 # World
-./src/worlds
+src/worlds/
+src/worlds/*
+src/worlds/*/chunks/*/*.world
 
 # Logs
 logs
@@ -132,3 +134,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+src/worlds/world/chunks/0/0.world
