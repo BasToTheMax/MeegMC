@@ -27,11 +27,13 @@ function sendChunk(client, x, y) {
     chunk.skyLightSections.forEach(e => e !== null && skyLight.push(new Uint8Array(e.data.buffer)));
     chunk.blockLightSections.forEach(e => e !== null && blockLight.push(new Uint8Array(e.data.buffer)));
 
-    chunkSave.saveChunk('world', x, y, 1, chunk.dump());
-    chunkSave.saveChunk('world', x, y, 1, chunk.dumpLight());
-    chunkSave.saveChunk('world', x, y, 1, chunk.loadLight());
+    chunkSave.saveChunk('world', x, y, 'world', chunk.dump());
+    chunkSave.saveChunk('world', x, y, 'light', chunk.dumpLight());
+    chunkSave.saveChunk('world', x, y, 'biome', chunk.dumpBiomes());
   } else {
     chunk.load(ch[1], 0xFFFF, false, true);
+    chunk.loadLight(ch[2]);
+    chunk.loadBiomes(ch[3]);
   }
 
   client.write('map_chunk', {
@@ -90,8 +92,8 @@ async function main(srv) {
       isFlat: false
     });
 
-    for(let i=0; i<=10; i++) {
-      for(let o=0; o<=10; o++) {
+    for(let i=-5; i<=5; i++) {
+      for(let o=-5; o<=5; o++) {
         sendChunk(client, i, o);
       }
     }
@@ -109,6 +111,13 @@ async function main(srv) {
     log.log('> Chunk sent!');
 
     client.writeChannel('minecraft:brand', 'Retslav');
+
+    client.on('position', (data) => {
+      console.log('pos', client.username, JSON.stringify(data));
+    });
+    client.on('look', (data) => {
+      console.log('look', client.username, JSON.stringify(data));
+    });
 
     client.on('end', (reason) => {
       log.info(`${client.username} left the game. Reason: ${reason}`);
