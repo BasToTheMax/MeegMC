@@ -61,7 +61,7 @@ async function main() {
 		maxPlayers: 100
 	});
 
-	require('./server').main([
+	require('./srv').main([
 		server,
 		log,
 		args
