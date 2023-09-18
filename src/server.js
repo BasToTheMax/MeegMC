@@ -29,11 +29,9 @@ function sendChunk(client, x, y) {
 
     chunkSave.saveChunk('world', x, y, 'world', chunk.dump());
     chunkSave.saveChunk('world', x, y, 'light', chunk.dumpLight());
-    chunkSave.saveChunk('world', x, y, 'biome', chunk.dumpBiomes());
   } else {
     chunk.load(ch[1], 0xFFFF, false, true);
     chunk.loadLight(ch[2]);
-    chunk.loadBiomes(ch[3]);
   }
 
   client.write('map_chunk', {
