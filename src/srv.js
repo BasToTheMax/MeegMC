@@ -22,15 +22,16 @@ async function main(srv) {
 
     for(let i = 0; i < plugins.length; i++) {
         var pluginData = plugins[i];
-        var l = (txt) => log.info(`[Plugin] [${pluginData.name}]: ${txt}`);
+        var l = (txt) => log.tag('PLUGIN', `[${pluginData.name}]: ${txt}`);
         srv.log = l;
         srv.args = args;
         var plugin = new pluginData._(srv);
-        if (pluginData.onStart && plugin.isEnabled) {   
-            plugin.onStart();
-        }
+        // if (pluginData.onStart && pluginData.isEnabled) {   
+        //     plugin.onStart();
+        // }
         if (pluginData.isEnabled) {
             log.info(`Loaded plugin ${pluginData.name}`);
+            if (plugin.onStart) plugin.onStart();
         } else {
             log.debug(`${pluginData.name} is disabled!`);
         }

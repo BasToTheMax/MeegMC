@@ -61,6 +61,8 @@ async function main() {
 		maxPlayers: 100
 	});
 
+	log.addTag("plugin", "PLUGIN", "", "#424ef5", "");
+
 	require('./srv').main([
 		server,
 		log,
