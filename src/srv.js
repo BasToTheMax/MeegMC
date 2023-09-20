@@ -26,9 +26,7 @@ async function main(srv) {
         srv.log = l;
         srv.args = args;
         var plugin = new pluginData._(srv);
-        // if (pluginData.onStart && pluginData.isEnabled) {   
-        //     plugin.onStart();
-        // }
+        
         if (pluginData.isEnabled) {
             log.info(`Loaded plugin ${pluginData.name}`);
             if (plugin.onStart) plugin.onStart();
