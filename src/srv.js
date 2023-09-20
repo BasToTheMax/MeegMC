@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const YAML = require('yaml')
+const yaml = require('js-yaml');
 
 async function main(srv) {
     var [server, log, args] = srv;
@@ -8,7 +8,6 @@ async function main(srv) {
     var pluginPath = path.join(__dirname, '../', 'plugins')
 
     log.info('Loading plugins...');
-    log.debug(pluginPath);
 
     if (!fs.existsSync(pluginPath)) fs.mkdirSync(pluginPath);
 
@@ -18,9 +17,26 @@ async function main(srv) {
         .map(dirent => dirent.name);
 
     var plugins = getDirectories(pluginPath);
-    console.log(plugins);
 
     plugins = await checkPlugins(plugins, pluginPath, srv);
+
+    for(let i = 0; i < plugins.length; i++) {
+        var pluginData = plugins[i];
+        var l = (txt) => log.info(`[Plugin] [${pluginData.name}]: ${txt}`);
+        srv.log = l;
+        srv.args = args;
+        var plugin = new pluginData._(srv);
+        if (pluginData.onStart && plugin.isEnabled) {   
+            plugin.onStart();
+        }
+        if (pluginData.isEnabled) {
+            log.info(`Loaded plugin ${pluginData.name}`);
+        } else {
+            log.debug(`${pluginData.name} is disabled!`);
+        }
+    }
+
+    log.info('Plugins loaded!');
 
     var stdin = process.openStdin();
 
@@ -39,23 +55,38 @@ function checkPlugins(plugins, plPath, srv) {
     for(let i = 0; i < plugins.length; i++) {
         var pl = plugins[i];
         if (!fs.existsSync(plPath + `/${pl}/plugin.yaml`)) {
-            log.error(`${pl} does not have a plugin.yaml. Disabling...`);
+            log.error(`Plugin ${pl} does not have a plugin.yaml. Disabling...`);
         } else {
-            plL.push(pl);
 
-            var pluginData = YAML.parse(plPath + `/${pl}/plugin.yaml`);
+            var rData = fs.readFileSync(plPath + `/${pl}/plugin.yaml`);
+            var pluginData = yaml.load(rData);
 
-            console.log(pluginData)
-
-            if (!fs.existsSync(plPath + `/${pl}/plugin.yaml`)) {
-                log.error(`${pl} does not have a plugin.yaml. Disabling...`);
-            } else {
-                plL.push(pl);
+            var isEnabled = true;
+            if (!pluginData.name || !pluginData.author || !pluginData.main) {
+                isEnabled = false;
+                log.error(`Plugin ${pl} is missing required data. Disabling...`);
             }
+
+            var toPush = {
+                ...pluginData,
+                isEnabled,
+                _: NoPlugin
+            };
+
+            if (isEnabled) toPush._ = require('../plugins/' + pl + '/' + pluginData.main);
+
+            plL.push(toPush);
+
         }
     }
+
+    return plL;
 }
 
 module.exports = {
     main
+}
+
+class NoPlugin {
+    // Used for disabled plugins
 }

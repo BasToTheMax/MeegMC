@@ -3,7 +3,7 @@ class ExamplePlugin {
     constructor(server) { this.server = server; }
     
     onStart() {
-        this.server.log.info('This is example plugin!');
+        this.server.log('This is example plugin!');
     }
 
 }

@@ -17,10 +17,10 @@
   "dependencies": {
     "arg": "^5.0.2",
     "fancy-printer": "^1.2.54",
+    "js-yaml": "^4.1.0",
     "minecraft-protocol": "^1.44.0",
     "pkg": "^5.8.1",
     "prismarine-chunk": "^1.35.0",
-    "vec3": "^0.1.8",
-    "yaml": "^2.3.2"
+    "vec3": "^0.1.8"
   }
 }
