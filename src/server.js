@@ -128,11 +128,14 @@ class Server {
         };
         conf.worlds = {
             default: 'world',
+            enabled: ['world'],
 
             world: {
-                enabled: false,
                 worldGeneration: 'normal',
-                
+
+                requirePermission: false,
+                permission: 'worlds.world.join',
+
                 'enable-nether': true,
                 'enable-end': true,
 
