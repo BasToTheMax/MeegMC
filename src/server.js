@@ -131,6 +131,8 @@ class Server {
 
             world: {
                 enabled: false,
+                worldGeneration: 'normal',
+                
                 'enable-nether': true,
                 'enable-end': true,
 
