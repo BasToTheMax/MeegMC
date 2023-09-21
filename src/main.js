@@ -1,5 +1,4 @@
 // Import packages
-const mc = require('minecraft-protocol');
 const arg = require('arg');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -68,24 +67,29 @@ async function main() {
 	log.info(`&eStarting minecraft server on &c${host}&e:&c${port}`);
 	
 	// Create mc server using protocol
-	const server = mc.createServer({
-		'online-mode': online,
-		encryption: true,
-		host: host,
-		port: port,
-		version: '1.18.2',
-		maxPlayers: 100
-	});
+	
 
 	// Add log for plugins
 	log.addTag("plugin", "PLUGIN", "", "#424ef5", "");
 
-	// Start main app
-	require('./srv').main([
-		server,
+	// Start
+	var Server = require('./server');
+	var server = new Server(
 		log,
-		args
-	]);
+		[
+			host,
+			port,
+			args,
+			online
+		]
+	);
+
+	// Start main app
+// 	require('./srv').main([
+// 		server,
+// 		log,
+// 		args
+// 	]);
 }
 
 module.exports = main;
