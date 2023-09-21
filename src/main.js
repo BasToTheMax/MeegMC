@@ -27,6 +27,8 @@ async function main() {
 	// Clear the screen
 	console.clear();
 
+	log.info(`Using dir ${process.cwd()}`);
+
 	// Help command
 	if (args['--help']) {
 		return console.log(require('./menus').help());
@@ -84,12 +86,6 @@ async function main() {
 		]
 	);
 
-	// Start main app
-// 	require('./srv').main([
-// 		server,
-// 		log,
-// 		args
-// 	]);
 }
 
 module.exports = main;
