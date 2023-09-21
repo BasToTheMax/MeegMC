@@ -6,6 +6,9 @@ const yaml = require('js-yaml');
 const CommandContext = require('./context/CommandContext');
 const ConsolePlayer = require('./context/ConsolePlayer');
 
+var supportedWorldGenerations;
+supportedWorldGenerations = ['normal'];
+
 class Server {
     constructor(log, a) {
         var [host, port, args, online] = a;
@@ -77,7 +80,21 @@ class Server {
     }
 
     loadWorlds() {
+        var world = this.config.world;
+        if (!world) {
+            this.log.error('No world in config. Stopping server. Please regenerate config!');
+            return this.stop();
+        }
+        
+        if (!supportedWorldGenerations.includes(world.worldGeneration)) {
+            this.log.error(`World has invalid world generation. Current: ${world.worldGeneration}. Supported: ${supportedWorldGenerations.join(', ')}`);
+            this.stop();
+        }
+    }
 
+    stop() {
+        this.log.info('Stopping server!');
+        process.exit(0);
     }
 
     loadConfig() {
@@ -126,21 +143,15 @@ class Server {
 
             'allow-flight': false
         };
-        conf.worlds = {
-            default: 'world',
-            enabled: ['world'],
+        conf.world = {
+            worldGeneration: 'normal',
 
-            world: {
-                worldGeneration: 'normal',
+            'enable-nether': true,
+            'enable-end': true,
 
-                requirePermission: false,
-                permission: 'worlds.world.join',
-
-                'enable-nether': true,
-                'enable-end': true,
-
-                gamemode: 'DEFAULT'
-            }
+            'max-mobs': 100,
+            'max-items': 100,
+            'max-entities': 100
         };
 
         return yaml.dump(conf, {
