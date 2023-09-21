@@ -36,10 +36,19 @@ class Server {
         this.ConsolePlayer = new ConsolePlayer(this);
         this.commands = {};
         this.players = [];
+        this.worlds = [];
+        this.config = {
+            host,
+            port,
+            online
+        };
 
         this.registerCommand('log', (ctx, args) => {
             ctx.server.log.log(`[${ctx.player.username}] ${args.join(' ')}`);
         });
+
+        this.loadConfig();
+        this.loadWorlds();
     }
 
     registerCommand(name, execute) {
@@ -65,6 +74,73 @@ class Server {
         this.commands[command].run(ctx, args);
 
         // console.log(`> ${command}`);
+    }
+
+    loadWorlds() {
+
+    }
+
+    loadConfig() {
+        var dir = process.cwd();
+        var path = dir + '/config.yaml';
+        this.log.info(`Loading config file from ${path}`);
+
+        if (!fs.existsSync(path)) {
+            fs.writeFileSync(path, this.createConfig());
+        }
+
+        var config = yaml.load(fs.readFileSync(path));
+
+        config.port = this.config.port;
+        config.host = this.config.host;
+        config.online = this.config.online;
+
+        this.config = config;
+        this.log.info('Config loaded!');
+    }
+
+    createConfig() {
+        var conf = {};
+
+        // conf.license = '<LICENSE CODE>';
+
+        conf.chunks = {
+            'render-distance': 10,
+            'simulation-distance': 5
+        };
+        conf.players = {
+            limit: 20,
+            whitelist: false,
+            defaultGamemode: 0,
+            hardcore: false,
+            difficulty: 'normal',
+            savePlayerData: true
+        }
+        conf.server = {
+            motd: 'Minecraft server'
+        };
+        conf.entities = {
+            'spawn-animals': true,
+            'spawn-monsters': true,
+            'spawn-npcs': true,
+
+            'allow-flight': false
+        };
+        conf.worlds = {
+            default: 'world',
+
+            world: {
+                enabled: false,
+                'enable-nether': true,
+                'enable-end': true,
+
+                gamemode: 'DEFAULT'
+            }
+        };
+
+        return yaml.dump(conf, {
+            indent: 4
+        });
     }
 
 }

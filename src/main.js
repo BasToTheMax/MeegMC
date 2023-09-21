@@ -8,7 +8,7 @@ const log = printer.create({
 	styleSubstitutionsEnabled: true
 });
 
-// Logginf format
+// Logging format
 log.setFormat(`%tag %text`);
 
 // Console arguments
