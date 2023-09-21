@@ -20,6 +20,7 @@ RetMC is a minecraft server software implemented in nodejs.
 - [ ] Permissions
 - [ ] Movement
 - [ ] Block placing and breaking
+- [ ] ! Plugin system !
 - [ ] Tools
 - [ ] Simple inventory system
 - [ ] Entities
@@ -34,3 +35,13 @@ RetMC is a minecraft server software implemented in nodejs.
 ### Beta
 - [ ] Chests
 - [ ] Furnaces
+
+## Technical data
+### Worlds
+#### Files
+- Chunks
+- Config (seed, ect)
+#### Sqlite
+- Player data (location, inventory)
+- World lightning
+- Ticking
