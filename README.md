@@ -11,7 +11,7 @@ RetMC is a minecraft server software implemented in nodejs.
 - [x] Commandline arguments
 - [x] Config file loading
 - [x] Console commands
-- [ ] Simple world generation
+- [x] Simple world generation
 - [ ] World loading and saving
 - [ ] Player joining
 - [ ] Seeing other players
