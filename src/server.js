@@ -90,6 +90,18 @@ class Server {
             this.log.error(`World has invalid world generation. Current: ${world.worldGeneration}. Supported: ${supportedWorldGenerations.join(', ')}`);
             this.stop();
         }
+
+        this.log.info(`Loading world... Generator: ${world.worldGeneration}`);
+
+        var worldPath = path.join(__dirname, '..', 'world');
+        this.log.info('World path: ' + worldPath);
+
+        if (!fs.existsSync(worldPath)) {
+            fs.mkdirSync(worldPath);
+            this.log.info(`Created world directory.`);
+        }
+
+        
     }
 
     stop() {
@@ -148,6 +160,8 @@ class Server {
 
             'enable-nether': true,
             'enable-end': true,
+
+            seed: 0,
 
             'max-mobs': 100,
             'max-items': 100,

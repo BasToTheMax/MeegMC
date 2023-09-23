@@ -17,6 +17,7 @@ class Player {
         this.onGround = true;
 
         this.inventory = {};
+        this.dimension = 0; // Overworld
     }
 
     setUsername(name) {
