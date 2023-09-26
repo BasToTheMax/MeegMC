@@ -75,8 +75,6 @@ class Server {
         var ctx = new CommandContext(this, this.ConsolePlayer);
 
         this.commands[command].run(ctx, args);
-
-        // console.log(`> ${command}`);
     }
 
     loadWorlds() {
