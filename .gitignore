@@ -140,3 +140,4 @@ src/worlds/world/chunks/0/0.world
 config.yaml
 world/level.db
 .gitignore
+world/level.db
