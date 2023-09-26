@@ -16,11 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "arg": "^5.0.2",
+    "better-sqlite3": "^8.6.0",
     "fancy-printer": "^1.2.54",
     "js-yaml": "^4.1.0",
     "minecraft-protocol": "^1.44.0",
     "pkg": "^5.8.1",
     "prismarine-chunk": "^1.35.0",
+    "quick.db": "^9.1.7",
     "seed-random": "^2.2.0",
     "vec3": "^0.1.8"
   }

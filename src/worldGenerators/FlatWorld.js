@@ -1,7 +1,7 @@
 const BaseGenerator = require('./BaseGenerator');
 
 class FlatWorldGenerator extends BaseGenerator {
-    constructor() {
+    constructor(seed) {
         super(seed);
 
         // Other logic, maybe

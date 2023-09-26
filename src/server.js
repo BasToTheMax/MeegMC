@@ -5,6 +5,7 @@ const yaml = require('js-yaml');
 // Modules
 const CommandContext = require('./context/CommandContext');
 const ConsolePlayer = require('./context/ConsolePlayer');
+const World = require('./context/World');
 
 var supportedWorldGenerations;
 supportedWorldGenerations = ['normal'];
@@ -39,7 +40,6 @@ class Server {
         this.ConsolePlayer = new ConsolePlayer(this);
         this.commands = {};
         this.players = [];
-        this.worlds = [];
         this.config = {
             host,
             port,
@@ -99,7 +99,15 @@ class Server {
             this.log.info(`Created world directory.`);
         }
 
-        
+        this.world = new World(
+            this,
+            
+            0,
+            require('./worldGenerators/FlatWorld'),
+            true,
+            true,
+            worldPath
+        );
     }
 
     stop() {
