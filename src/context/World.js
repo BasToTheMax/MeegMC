@@ -1,6 +1,16 @@
 const FlatWorldGenerator = require('../worldGenerators/FlatWorld');
 const { QuickDB } = require("quick.db");
 
+function rand(min, max) {
+
+    min = Math.ceil(min);
+    
+    max = Math.floor(max);
+    
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+    
+}
+
 class World {
     constructor(srv, generator = FlatWorldGenerator, hasNether = true, hasEnd = true, worldPath) {
 
@@ -26,10 +36,9 @@ class World {
 
     async loadSeed() {
         if (!await this.db.get('seed')) {
-            const Seed = require('seed-random');
-            var seed = Seed()();
-            console.log('s', seed)
-            // await this.db.set('seed', seed)
+            var seed = rand(0, Math.pow(2, 64))
+            this.log.info('Seed generated!');
+            await this.db.set('seed', seed)
         }
 
         var seed = await this.db.get('seed');

@@ -2,6 +2,8 @@
 src/worlds/
 src/worlds/*
 src/worlds/*/chunks/*/*.world
+world/*
+world/*.db
 
 # Logs
 logs
@@ -136,3 +138,5 @@ dist
 .pnp.*
 src/worlds/world/chunks/0/0.world
 config.yaml
+world/level.db
+.gitignore
