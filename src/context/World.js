@@ -9,7 +9,6 @@ class World {
         this.log = log;
 
         this.seed = 0;
-        this.generator = new generator(seed);
         this.hasNether = hasNether;
         this.hasEnd = hasEnd;
         this.path = worldPath;
@@ -20,6 +19,8 @@ class World {
         });
 
         this.loadSeed();
+
+        this.generator = new generator(this.seed);
 
     }
 
