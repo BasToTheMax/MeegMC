@@ -2,13 +2,13 @@ const FlatWorldGenerator = require('../worldGenerators/FlatWorld');
 const { QuickDB } = require("quick.db");
 
 class World {
-    constructor(srv, seed, generator = FlatWorldGenerator, hasNether = true, hasEnd = true, worldPath) {
+    constructor(srv, generator = FlatWorldGenerator, hasNether = true, hasEnd = true, worldPath) {
 
         var { log } = srv;
 
         this.log = log;
 
-        this.seed = seed;
+        this.seed = 0;
         this.generator = new generator(seed);
         this.hasNether = hasNether;
         this.hasEnd = hasEnd;

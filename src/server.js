@@ -101,8 +101,7 @@ class Server {
 
         this.world = new World(
             this,
-            
-            0,
+
             require('./worldGenerators/FlatWorld'),
             true,
             true,
