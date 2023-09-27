@@ -55,7 +55,7 @@ class Server {
     }
 
     registerCommand(name, execute) {
-        this.log.log(`Registering command /${name}...`);
+        this.log.info(`Registering command /${name}...`);
         if (this.commands[name]) {
             this.log.warn(`Command /${name} already exists. Existing command will be overwritten.`);
         }
@@ -77,7 +77,7 @@ class Server {
         this.commands[command].run(ctx, args);
     }
 
-    loadWorlds() {
+    async loadWorlds() {
         var world = this.config.world;
         if (!world) {
             this.log.error('No world in config. Stopping server. Please regenerate config!');
@@ -107,6 +107,12 @@ class Server {
             true,
             worldPath
         );
+
+        if (await this.world.chunkExists(0, 0)) {
+            this.log.info(`Spawn chunk exists!`);
+        }
+
+        var spawnChunk = this.world.getChunk(0, 0, 'overworld');
     }
 
     stop() {

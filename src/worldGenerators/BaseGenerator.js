@@ -1,24 +1,13 @@
-const Seed = require('seed-random');
 const Chunk = require('prismarine-chunk')('1.18.2');
 const mcData = require('minecraft-data')('1.18.2');
+const { Vec3 } = require("vec3")
 
 class BaseGenerator {
     constructor(seed) {
-        if (!seed) seed = this.generateSeed();
-
         this.seed = seed;
     }
 
-    generateSeed() {
-        var seed = Seed();
-        this.seed = seed;
-    }
-
-    getChunk(x, y) {
-        const chunk = new Chunk({
-            minY: -64,
-            worldHeight: 384
-        });
+    generateChunk(chunk, x, y) {
 
         for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
