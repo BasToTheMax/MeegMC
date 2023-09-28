@@ -1,8 +1,7 @@
 const FlatWorldGenerator = require('../worldGenerators/FlatWorld');
 const { QuickDB } = require("quick.db");
 
-const registry = require('prismarine-registry')('1.18.2')
-const ChunkColumn = require('prismarine-chunk')('1.18.2')
+const ChunkColumn = require('prismarine-chunk')('1.18');
 
 const Keyv = require('keyv');
 
@@ -33,7 +32,7 @@ class World {
             table: 'level'
         });
         this.worldDB = new QuickDB({
-            filePath: worldPath + '/world.db'
+            filePath: worldPath + '/light.db'
         });
         this.dbChunk = new Keyv(`sqlite://${worldPath}/chunks.db`);
         this.dbLight = this.worldDB.table('light');
@@ -69,28 +68,35 @@ class World {
         if (!await this.chunkExists(x, y, dimension)) {
             var chunk = new ChunkColumn({
                 minY: -64,
-                worldHeight: 320
+                worldHeight: 384
             });
 
-            chunk = this.generator.generateChunk(chunk, x, y);
+            var start = Date.now();
+            chunk = await this.generator.generateChunk(chunk, x, y);
 
-            await this.dbChunk.set(`${dimension}-${x}-${y}`, chunk.dump());
-            await this.dbLight.set(`${dimension}-${x}-${y}`, chunk.dumpLight());
+            // await this.dbChunk.set(`${dimension}-${x}-${y}`, chunk.dump());
+            // await this.dbLight.set(`${dimension}-${x}-${y}`, chunk.toJson());
 
-            this.log.info(`Generated chunk ${x}, ${y} (${dimension})`);
+            await this.dbChunk.set(`${dimension}-${x}-${y}`, chunk.toJson());
+            await this.dbLight.set(`${dimension}-${x}-${y}`, []);
+
+            var end = Date.now();
+            var time = end-start;
+
+            this.log.info(`Generated chunk ${x}, ${y} at ${dimension} in ${time}ms`);
 
             return [false, chunk];
         }
 
-        var chunkD = new ChunkColumn({
-            minY: -64,
-            worldHeight: 320
-        });
+        // console.log(typeof ChunkColumn.fromJson)
+        // var chunkD = new ChunkColumn({
+        //     minY: -64,
+        //     worldHeight: 384
+        // });
+        var chunkD = ChunkColumn.fromJson( await this.dbChunk.get(`${dimension}-${x}-${y}`) );
 
-        console.log(chunkD);
-
-        chunkD.load( await this.dbChunk.get(`${dimension}-${x}-${y}`) , 0xFFFF, false, true );
-        chunkD.loadLight( await this.dbLight.get(`${dimension}-${x}-${y}`) );
+        // chunkD.load( await this.dbChunk.get(`${dimension}-${x}-${y}`), 0xFFFF, false, true );
+        // chunkD.fromJson( await this.dbLight.get(`${dimension}-${x}-${y}`) );
 
         return [true, chunkD];
     }
@@ -108,10 +114,10 @@ class World {
 
         return chunk.dump();
     }
-    async dumpChunkBlocks(x, y, difficulty = 'overworld') {
+    async dumpChunkLight(x, y, difficulty = 'overworld') {
         var chunk = await this.getChunk(x, y, dimension);
         
-        return chunk.dumpLight;
+        return chunk.toJson;
     }
 
 }

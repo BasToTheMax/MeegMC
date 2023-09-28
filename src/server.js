@@ -112,7 +112,11 @@ class Server {
             this.log.info(`Spawn chunk exists!`);
         }
 
-        var spawnChunk = this.world.getChunk(0, 0, 'overworld');
+        for (let x=-7; x<=7; x++) {
+            for (let y=-7; y<=7; y++) {
+                await this.world.getChunk(x, y);
+            }
+        }
     }
 
     stop() {
