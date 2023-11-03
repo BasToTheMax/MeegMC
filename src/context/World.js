@@ -83,7 +83,7 @@ class World {
             var end = Date.now();
             var time = end-start;
 
-            this.log.info(`Generated chunk ${x}, ${y} at ${dimension} in ${time}ms`);
+            this.log.info(`Generated chunk ${x}, ${y} in ${dimension} in ${time}ms`);
 
             return [false, chunk];
         }
